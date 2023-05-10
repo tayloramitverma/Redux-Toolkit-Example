@@ -1,8 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+export const fetchUsername = createAsyncThunk("fetchusername", async () => {
+  const res = await fetch("https://jsonplaceholder.typicode.com/users");
+  const result = await res.json();
+  return result[Math.floor(Math.random() * 10)].username;
+});
 
 export const counterSlice = createSlice({
   name: "counter",
   initialState: {
+    username: "tayloramitverma",
     value: 0,
   },
   reducers: {
@@ -18,6 +25,17 @@ export const counterSlice = createSlice({
     },
     incrementByAmount: (state, action) => {
       state.value += action.payload;
+    },
+  },
+  extraReducers: {
+    [fetchUsername.fulfilled]: (state, action) => {
+      state.username = action.payload;
+    },
+    [fetchUsername.pending]: (state, action) => {
+      state.username = "loading...";
+    },
+    [fetchUsername.rejected]: (state, action) => {
+      state.username = "try again";
     },
   },
 });
@@ -38,5 +56,6 @@ export const incrementAsync = (amount) => (dispatch) => {
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
 export const selectCount = (state) => state.counter.value;
+export const getUsername = (state) => state.counter.username;
 
 export default counterSlice.reducer;

@@ -5,12 +5,15 @@ import {
   increment,
   incrementByAmount,
   incrementAsync,
+  fetchUsername,
   selectCount,
+  getUsername,
 } from "./counterSlice";
 import styles from "./Counter.module.css";
 
 export function Counter() {
   const count = useSelector(selectCount);
+  const username = useSelector(getUsername);
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState("2");
 
@@ -33,6 +36,7 @@ export function Counter() {
           -
         </button>
       </div>
+      <div className="row">{username}</div>
       <div className={styles.row}>
         <input
           className={styles.textbox}
@@ -53,6 +57,13 @@ export function Counter() {
           onClick={() => dispatch(incrementAsync(Number(incrementAmount) || 0))}
         >
           Add Async
+        </button>
+
+        <button
+          className={styles.asyncButton}
+          onClick={() => dispatch(fetchUsername())}
+        >
+          Update Username
         </button>
       </div>
     </div>
